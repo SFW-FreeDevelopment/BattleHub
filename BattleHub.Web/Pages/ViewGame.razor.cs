@@ -10,18 +10,18 @@ public partial class ViewGame : ComponentBase
     [Inject] public GameService GameService { get; set; }
     
     [Parameter] public string Id { get; set; }
-    [Parameter] public string Slug { get; set; }
 
-    public Game Game { get; set; } = new()
-    {
-        Id = "mvc2",
-        Name = "Marvel vs Capcom 2"
-    };
+    public Game Game { get; set; } = new();
+    public string PageHeading => Game?.Name ?? "Not A Real Game";
 
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
-        
-        
+
+        Game = await GameService.Get(Id);
+        if (Game == null)
+        {
+            NavigationManager.NavigateTo("/");
+        }
     }
 }

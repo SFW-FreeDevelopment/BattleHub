@@ -1,10 +1,16 @@
+using BattleHub.DataAccess.Repositories;
 using BattleHub.Web.Services;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddScoped<IMongoClient, MongoClient>(_ =>
+    new MongoClient(
+        MongoClientSettings.FromConnectionString(builder.Configuration.GetConnectionString("MongoDB"))));
+builder.Services.AddScoped<GameRepository>();
 builder.Services.AddScoped<GameService>();
 
 var app = builder.Build();
